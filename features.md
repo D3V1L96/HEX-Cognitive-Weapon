@@ -1,0 +1,19 @@
+| Feature                             | ChatGPT                                        | Microsoft Copilot                 | Google Gemini                     | **H.E.X**                             |
+| ----------------------------------- | ---------------------------------------------- | --------------------------------- | --------------------------------- | ------------------------------------- |
+| Local LLM inference                 | No, standard service is cloud-based            | Primarily cloud-based             | Primarily cloud-based             | Yes, through Ollama                   |
+| Offline AI inference                | No                                             | Limited / configuration-dependent | Limited / configuration-dependent | Yes, with a local model               |
+| Data processing control             | Service-dependent                              | Service-dependent                 | Service-dependent                 | Greater control with local execution  |
+| Custom AI personality               | Yes                                            | Limited / product-dependent       | Yes                               | Customizable through prompts          |
+| Natural-language interaction        | Yes                                            | Yes                               | Yes                               | Yes                                   |
+| Voice interaction                   | Yes                                            | Yes                               | Yes                               | Supported by configured voice modules |
+| Hinglish voice                      | Model-dependent                                | Model-dependent                   | Model-dependent                   | Depends on speech engine and model    |
+| Windows volume control              | Not a core native feature                      | Windows integration-dependent     | Not a core native feature         | Through system-control modules        |
+| Media-session control               | Limited native control                         | Windows integration-dependent     | Limited native control            | Through media controller              |
+| Custom desktop automation           | Tool / integration-dependent                   | Integration-dependent             | Integration-dependent             | Custom Python integrations            |
+| Local model selection               | Product-dependent                              | Product-dependent                 | Product-dependent                 | Configurable through Ollama           |
+| Custom Python modules               | External development required                  | External development required     | External development required     | Designed for direct integration       |
+| OSINT integration                   | Tools / integrations                           | Tools / integrations              | Tools / integrations              | Optional Shodan and WHOIS modules     |
+| API integrations                    | Available                                      | Available                         | Available                         | Custom integrations                   |
+| Execution permissions               | Platform-dependent                             | Platform-dependent                | Platform-dependent                | Defined by local implementation       |
+| Internet-independent core inference | Generally unavailable in standard hosted usage | Product-dependent                 | Product-dependent                 | Supported with local inference        |
+| User-controlled local environment   | Limited                                        | Windows integration-dependent     | Limited                           | Primary design objective              |
