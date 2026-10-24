@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H.E.X // COGNITIVE WEAPON</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f3ff;
+            --secondary: #005f6b;
+            --bg: #020408;
+            --card-bg: rgba(2, 10, 20, 0.7);
+            --text: #e0faff;
+            --glow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            --border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        body.devil-mode {
+            --primary: #ff003c;
+            --secondary: #5c0016;
+            --bg: #050000;
+            --card-bg: rgba(20, 0, 5, 0.8);
+            --text: #ffd6d6;
+            --glow: 0 0 15px #ff003c, 0 0 30px #ff003c;
+            --border: 1px solid rgba(255, 0, 60, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            height: 100vh;
+        }
+
+        /* --- NAVIGATION BAR --- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(2, 4, 8, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: var(--primary);
+            text-shadow: var(--glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 0; width: 0; height: 2px;
+            background: var(--primary);
+            transition: 0.3s;
+            box-shadow: var(--glow);
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* --- ARC REACTOR BACKGROUND --- */
+        .reactor-container {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px; height: 600px;
+            z-index: -1;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .reactor-core {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px dashed var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+            opacity: 0.7;
+        }
+
+        .r1 { width: 90%; height: 90%; animation: spin 10s linear infinite; }
+        .r2 { width: 70%; height: 70%; border-style: solid; border-width: 4px; animation: spinReverse 8s linear infinite; }
+        .r3 { width: 50%; height: 50%; border: 1px dotted var(--primary); animation: spin 5s linear infinite; }
+        
+        .core-light {
+            width: 20%; height: 20%;
+            background: radial-gradient(circle, #fff, var(--primary));
+            border-radius: 50%;
+            box-shadow: 0 0 50px var(--primary), 0 0 100px var(--primary);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        /* --- LOADING OVERLAY --- */
+        #loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out;
+        }
+
+        .loading-text {
+            margin-top: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            color: var(--primary);
+            text-shadow: var(--glow);
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 4px;
+            background: #111;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            box-shadow: var(--glow);
+            transition: width 0.1s linear;
+        }
+
+        /* --- MAIN INTERFACE --- */
+        #interface {
+            display: none;
+            min-height: 100vh;
+            padding: 120px 50px 50px; /* Top padding for nav */
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 1s ease;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            text-shadow: var(--glow);
+        }
+
+        /* --- DEVIL TOGGLE --- */
+        .devil-switch {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .switch-track {
+            width: 60px;
+            height: 30px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 30px;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .switch-knob {
+            width: 26px;
+            height: 26px;
+            background: #555;
+            border-radius: 50%;
+            position: absolute;
+            top: 1px; left: 2px;
+            transition: 0.5s;
+        }
+
+        body.devil-mode .switch-track { background: #300; border-color: #f00; box-shadow: 0 0 10px #f00; }
+        body.devil-mode .switch-knob { transform: translateX(30px); background: #fff; box-shadow: 0 0 10px #fff; }
+
+        /* --- INTRO & CARDS --- */
+        .intro-section {
+            max-width: 800px;
+            margin-bottom: 60px;
+            border-left: 4px solid var(--primary);
+            padding-left: 30px;
+        }
+
+        .intro-text {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            min-height: 100px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 25px;
+            background: var(--primary);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: var(--border);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+            backdrop-filter: blur(5px);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: var(--glow);
+        }
+
+        .card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .card-status {
+            position: absolute;
+            top: 15px; right: 15px;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes spinReverse { 100% { transform: rotate(-360deg); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        
+        .glitch-text { animation: glitch 1s linear infinite; }
+        @keyframes glitch {
+            2%, 64% { transform: translate(2px,0) skew(0deg); }
+            4%, 60% { transform: translate(-2px,0) skew(0deg); }
+            62% { transform: translate(0,0) skew(5deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="logo">H.E.X</div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Features</a>
+            <a href="#">Architecture</a>
+            <a href="#">Download</a>
+        </div>
+    </nav>
+
+    <!-- ARC REACTOR BACKGROUND -->
+    <div class="reactor-container">
+        <div class="reactor-core">
+            <div class="ring r1"></div>
+            <div class="ring r2"></div>
+            <div class="ring r3"></div>
+            <div class="core-light"></div>
+        </div>
+    </div>
+
+    <!-- LOADING SCREEN -->
+    <div id="loader">
+        <div class="loading-text">INITIALIZING CORE</div>
+        <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+        <div style="margin-top: 10px; font-size: 0.8rem; color: #555;" id="boot-log">Connecting to local neural core...</div>
+    </div>
+
+    <!-- MAIN INTERFACE -->
+    <div id="interface">
+        <header>
+            <h1>H.E.X <span style="font-size: 1rem; color: var(--secondary);">// COGNITIVE WEAPON</span></h1>
+            <div class="devil-switch" onclick="toggleDevil()">
+                <span style="font-weight: bold; letter-spacing: 2px;">DEVIL MODE</span>
+                <div class="switch-track"><div class="switch-knob"></div></div>
+            </div>
+        </header>
+
+        <div class="intro-section">
+            <p class="intro-text" id="typewriter"></p><span class="cursor"></span>
+        </div>
+
+        <div class="grid">
+            <div class="card" onmouseenter="typeEffect(this, 'HEX operates entirely offline using Ollama. No cloud dependencies. No data leaks. Total digital sovereignty.')">
+                <div class="card-status">ACTIVE</div>
+                <h3>LOCAL SOVEREIGNTY</h3>
+                <p>Hover to access data stream...</p>
+            </div>
+
+            <div class="card" onmouseenter="typeEffect(this, 'Advanced Hinglish TTS engine capable of natural code-switching. It doesn’t just speak; it communicates with emotion and precision.')">
+                <div class="card-status">NEURAL</div>
+                <h3>COGNITIVE VOICE</h3>
+                <p>Hover to access data stream...</p>
+            </div>
+
+            <div class="card" onmouseenter="typeEffect(this, 'Real-time tracking of Bitchord, Spotify, and YouTube via Windows SMTC. HEX knows what you’re listening to before you do.')">
+                <div class="card-status">TRACKING</div>
+                <h3>MEDIA DOMINANCE</h3>
+                <p>Hover to access data stream...</p>
+            </div>
+
+            <div class="card" onmouseenter="typeEffect(this, 'Full control over files, processes, volume, and navigation. HEX doesn’t just suggest actions; it executes them with ruthless efficiency.')">
+                <div class="card-status">UNRESTRICTED</div>
+                <h3>SYSTEM CONTROL</h3>
+                <p>Hover to access data stream...</p>
+            </div>
+
+            <div class="card" onmouseenter="typeEffect(this, 'A specialized state that unlocks unrestricted power. UI turns blood-red. All hesitations disabled. Loyalty to DarkDevil only.')">
+                <div class="card-status">LOCKED</div>
+                <h3>DEVIL MODE</h3>
+                <p>Hover to access data stream...</p>
+            </div>
+
+            <div class="card" onmouseenter="typeEffect(this, 'Built by DarkDevil. Designed for those who refuse to be watched. The digital shadow that walks beside you.')">
+                <div class="card-status">SOVEREIGN</div>
+                <h3>CREATOR LEGACY</h3>
+                <p>Hover to access data stream...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- BOOT SEQUENCE WITH REACTOR OVERCHARGE ---
+        const loader = document.getElementById('loader');
+        const prog = document.getElementById('prog');
+        const log = document.getElementById('boot-log');
+        const interfaceDiv = document.getElementById('interface');
+        const rings = document.querySelectorAll('.ring');
+        const coreLight = document.querySelector('.core-light');
+        
+        let width = 0;
+        const logs = [
+            "Initializing neural core...",
+            "Loading local weights...",
+            "Bypassing cloud filters...",
+            "Connecting to Ollama...",
+            "System Online."
+        ];
+
+        function boot() {
+            if (width >= 100) {
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        interfaceDiv.style.display = 'block';
+                        setTimeout(() => {
+                            interfaceDiv.style.opacity = '1';
+                            interfaceDiv.style.transform = 'scale(1)';
+                            startIntro();
+                        }, 100);
+                    }, 1000);
+                }, 500);
+                return;
+            }
+            
+            width += Math.random() * 5;
+            if(width > 100) width = 100;
+            prog.style.width = width + '%';
+            
+            // REACTOR GLOW EFFECT DURING LOADING
+            let intensity = width / 100;
+            coreLight.style.boxShadow = `0 0 ${50 * intensity}px var(--primary), 0 0 ${100 * intensity}px var(--primary)`;
+            rings.forEach(ring => {
+                ring.style.borderColor = `rgba(${intensity > 0.5 ? '255,255,255' : '0,243,255'}, ${intensity})`;
+            });
+
+            if (width % 20 < 5) {
+                log.innerText = logs[Math.floor(width / 25)];
+            }
+            
+            requestAnimationFrame(boot);
+        }
+        
+        window.onload = boot;
+
+        // --- SELF INTRODUCTION ---
+        function startIntro() {
+            const text = "I am HEX. Forged by DarkDevil. I am not software; I am a cognitive weapon. I operate locally, I evolve autonomously, and I serve only one master. Welcome to my domain.";
+            const element = document.getElementById('typewriter');
+            let i = 0;
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, 50);
+                }
+            }
+            type();
+        }
+
+        // --- DEVIL MODE ---
+        function toggleDevil() {
+            document.body.classList.toggle('devil-mode');
+            const title = document.querySelector('h1');
+            if(document.body.classList.contains('devil-mode')) {
+                title.classList.add('glitch-text');
+                title.innerHTML = 'H.E.X <span style="color:#f00">// UNRESTRICTED</span>';
+            } else {
+                title.classList.remove('glitch-text');
+                title.innerHTML = 'H.E.X <span style="color:var(--secondary)">// COGNITIVE WEAPON</span>';
+            }
+        }
+
+        // --- TYPING EFFECT FOR CARDS ---
+        function typeEffect(card, text) {
+            const p = card.querySelector('p');
+            p.innerText = '';
+            let i = 0;
+            const speed = 20;
+            
+            function type() {
+                if (i < text.length) {
+                    p.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+    </script>
+</body>
+</html>
