@@ -3,486 +3,858 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>H.E.X // COGNITIVE WEAPON</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>H.E.X | Heuristic Execution Intelligence</title>
+    <meta name="description" content="Local Intelligence. Controlled Execution. Private by Design.">
+    <meta name="theme-color" content="#050a14">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
+        /* =========================================
+           1. CORE VARIABLES & THEME SYSTEM
+           ========================================= */
         :root {
-            --primary: #00f3ff;
-            --secondary: #005f6b;
-            --bg: #020408;
-            --card-bg: rgba(2, 10, 20, 0.7);
-            --text: #e0faff;
-            --glow: 0 0 10px var(--primary), 0 0 20px var(--primary);
-            --border: 1px solid rgba(0, 243, 255, 0.3);
+            --bg-core: #050a14;
+            --glass-bg: rgba(10, 20, 35, 0.25);
+            --glass-border: rgba(0, 229, 255, 0.15);
+            --accent: #00e5ff;
+            --accent-dim: rgba(0, 229, 255, 0.1);
+            --accent-glow: rgba(0, 229, 255, 0.5);
+            --text-main: #e0f7fa;
+            --text-muted: #6b8a9e;
+            --font-display: 'Rajdhani', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition-speed: 0.6s;
         }
 
         body.devil-mode {
-            --primary: #ff003c;
-            --secondary: #5c0016;
-            --bg: #050000;
-            --card-bg: rgba(20, 0, 5, 0.8);
-            --text: #ffd6d6;
-            --glow: 0 0 15px #ff003c, 0 0 30px #ff003c;
-            --border: 1px solid rgba(255, 0, 60, 0.4);
+            --bg-core: #0a0505;
+            --glass-bg: rgba(30, 10, 10, 0.25);
+            --glass-border: rgba(255, 42, 42, 0.15);
+            --accent: #ff2a2a;
+            --accent-dim: rgba(255, 42, 42, 0.1);
+            --accent-glow: rgba(255, 42, 42, 0.5);
+            --text-main: #ffebeb;
+            --text-muted: #9e6b6b;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
         
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-core);
+            color: var(--text-main);
+            font-family: var(--font-display);
             overflow-x: hidden;
-            height: 100vh;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            line-height: 1.6;
         }
 
-        /* --- NAVIGATION BAR --- */
-        nav {
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            background: rgba(2, 4, 8, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        /* Dynamic Background Grid */
+        .sys-grid {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background-image: 
+                linear-gradient(var(--glass-border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--glass-border) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.15;
+            mask-image: radial-gradient(circle at center, black 20%, transparent 90%);
+            transform: perspective(500px) rotateX(20deg) scale(1.2);
+            transform-origin: center top;
+            transition: background-image var(--transition-speed) ease;
         }
 
-        .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: var(--primary);
-            text-shadow: var(--glow);
+        h1, h2, h3, h4 { text-transform: uppercase; letter-spacing: 0.05em; line-height: 1.1; }
+        .mono { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.02em; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        section { padding: 100px 0; position: relative; }
+
+        /* =========================================
+           2. CINEMATIC LANDING PAGE (FULL OVERLAY)
+           ========================================= */
+        #landing-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            background: var(--bg-core);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: clip-path 1s cubic-bezier(0.77, 0, 0.175, 1), visibility 1s;
+            clip-path: circle(150% at 50% 50%);
         }
 
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 500;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            transition: 0.3s;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px; left: 0; width: 0; height: 2px;
-            background: var(--primary);
-            transition: 0.3s;
-            box-shadow: var(--glow);
-        }
-
-        .nav-links a:hover::after { width: 100%; }
-        .nav-links a:hover { color: var(--primary); }
-
-        /* --- ARC REACTOR BACKGROUND --- */
-        .reactor-container {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 600px; height: 600px;
-            z-index: -1;
-            opacity: 0.3;
+        /* When system is active, close the iris */
+        body.system-active #landing-overlay {
+            clip-path: circle(0% at 50% 50%);
+            visibility: hidden;
             pointer-events: none;
         }
 
-        .reactor-core {
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.1);
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ring {
-            position: absolute;
-            border-radius: 50%;
-            border: 2px dashed var(--primary);
-            box-shadow: 0 0 15px var(--primary);
-            opacity: 0.7;
-        }
-
-        .r1 { width: 90%; height: 90%; animation: spin 10s linear infinite; }
-        .r2 { width: 70%; height: 70%; border-style: solid; border-width: 4px; animation: spinReverse 8s linear infinite; }
-        .r3 { width: 50%; height: 50%; border: 1px dotted var(--primary); animation: spin 5s linear infinite; }
-        
-        .core-light {
-            width: 20%; height: 20%;
-            background: radial-gradient(circle, #fff, var(--primary));
-            border-radius: 50%;
-            box-shadow: 0 0 50px var(--primary), 0 0 100px var(--primary);
-            animation: pulse 2s infinite ease-in-out;
-        }
-
-        /* --- LOADING OVERLAY --- */
-        #loader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 1s ease-out;
-        }
-
-        .loading-text {
-            margin-top: 30px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            letter-spacing: 5px;
-            color: var(--primary);
-            text-shadow: var(--glow);
-        }
-
-        .progress-bar {
-            width: 300px;
-            height: 4px;
-            background: #111;
-            margin-top: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--primary);
-            width: 0%;
-            box-shadow: var(--glow);
-            transition: width 0.1s linear;
-        }
-
-        /* --- MAIN INTERFACE --- */
-        #interface {
-            display: none;
-            min-height: 100vh;
-            padding: 120px 50px 50px; /* Top padding for nav */
-            opacity: 0;
-            transform: scale(0.95);
-            transition: all 1s ease;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: var(--border);
-            padding-bottom: 20px;
-            margin-bottom: 50px;
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            text-transform: uppercase;
-            letter-spacing: 10px;
-            text-shadow: var(--glow);
-        }
-
-        /* --- DEVIL TOGGLE --- */
-        .devil-switch {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-        }
-
-        .switch-track {
-            width: 60px;
-            height: 30px;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 30px;
-            position: relative;
-            transition: 0.5s;
-        }
-
-        .switch-knob {
-            width: 26px;
-            height: 26px;
-            background: #555;
-            border-radius: 50%;
-            position: absolute;
-            top: 1px; left: 2px;
-            transition: 0.5s;
-        }
-
-        body.devil-mode .switch-track { background: #300; border-color: #f00; box-shadow: 0 0 10px #f00; }
-        body.devil-mode .switch-knob { transform: translateX(30px); background: #fff; box-shadow: 0 0 10px #fff; }
-
-        /* --- INTRO & CARDS --- */
-        .intro-section {
-            max-width: 800px;
+        /* 3D HUD GYROSCOPE */
+        .hud-scene {
+            width: 350px; height: 350px;
+            perspective: 1000px;
             margin-bottom: 60px;
-            border-left: 4px solid var(--primary);
-            padding-left: 30px;
         }
 
-        .intro-text {
-            font-size: 1.5rem;
-            line-height: 1.6;
-            min-height: 100px;
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 25px;
-            background: var(--primary);
-            animation: blink 1s infinite;
-            vertical-align: middle;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: var(--border);
-            padding: 30px;
+        .hud-core {
+            width: 100%; height: 100%;
             position: relative;
-            overflow: hidden;
-            transition: 0.4s;
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hud-ring {
+            position: absolute; inset: 0; border-radius: 50%;
+            border: 1px solid var(--accent);
+            box-shadow: 0 0 15px var(--accent-dim), inset 0 0 15px var(--accent-dim);
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .ring-1 { transform: rotateX(70deg); animation: spin-z 10s linear infinite; border-width: 2px; }
+        .ring-2 { transform: rotateY(45deg); animation: spin-y 15s linear infinite reverse; opacity: 0.7; inset: 20px; }
+        .ring-3 { transform: rotateX(-45deg); animation: spin-x 20s linear infinite; border-style: dashed; inset: 40px; opacity: 0.5; }
+
+        .hud-text {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem; font-weight: 700; letter-spacing: 0.15em;
+            color: var(--accent);
+            text-shadow: 0 0 40px var(--accent-glow);
+            z-index: 10;
+            transition: color var(--transition-speed), text-shadow var(--transition-speed);
+        }
+
+        .init-btn {
+            padding: 18px 60px;
+            background: transparent; border: 1px solid var(--accent);
+            color: var(--accent); font-family: var(--font-mono); font-size: 1.1rem;
+            text-transform: uppercase; letter-spacing: 0.3em;
+            cursor: pointer; position: relative; overflow: hidden;
+            transition: all 0.4s ease;
             backdrop-filter: blur(5px);
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
-
-        .card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: var(--glow);
+        .init-btn::before {
+            content: ''; position: absolute; inset: 0;
+            background: var(--accent); transform: scaleX(0); transform-origin: right;
+            transition: transform 0.4s ease; z-index: -1;
         }
+        .init-btn:hover { color: var(--bg-core); box-shadow: 0 0 40px var(--accent-glow); }
+        .init-btn:hover::before { transform: scaleX(1); transform-origin: left; }
 
-        .card h3 {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--primary);
-            margin-bottom: 15px;
+        .landing-sub { margin-top: 30px; color: var(--text-muted); letter-spacing: 0.4em; font-size: 0.7rem; text-transform: uppercase; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes spin-z { to { transform: rotateX(70deg) rotateZ(360deg); } }
+        @keyframes spin-y { to { transform: rotateY(45deg) rotateZ(360deg); } }
+        @keyframes spin-x { to { transform: rotateX(-45deg) rotateZ(360deg); } }
+
+        /* =========================================
+           3. NAVIGATION
+           ========================================= */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            padding: 20px 0; background: rgba(5, 10, 20, 0.5);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all var(--transition-speed) ease;
+            opacity: 0; transform: translateY(-20px);
         }
+        body.system-active nav { opacity: 1; transform: translateY(0); transition-delay: 0.8s; }
 
-        .card-status {
-            position: absolute;
-            top: 15px; right: 15px;
-            font-size: 0.7rem;
-            padding: 3px 8px;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-        }
+        .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: 0.1em; cursor: pointer; color: var(--accent); }
+        .nav-links { display: flex; gap: 32px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; text-transform: uppercase; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); text-shadow: 0 0 10px var(--accent-dim); }
+        .sys-status { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--accent); }
+        .status-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 8px var(--accent); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        /* --- ANIMATIONS --- */
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes spinReverse { 100% { transform: rotate(-360deg); } }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        /* =========================================
+           4. HERO & 3D GLASS TERMINAL
+           ========================================= */
+        #hero { min-height: 100vh; display: flex; align-items: center; padding-top: 80px; opacity: 0; transition: opacity 1s ease 1s; }
+        body.system-active #hero { opacity: 1; }
+
+        .hero-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .hero-tag { display: inline-block; padding: 6px 16px; border: 1px solid var(--glass-border); color: var(--accent); margin-bottom: 20px; font-size: 0.75rem; backdrop-filter: blur(4px); border-radius: 2px; }
+        .hero-title { font-size: clamp(3rem, 6vw, 5.5rem); margin-bottom: 10px; text-shadow: 0 0 50px var(--accent-dim); }
+        .hero-subtitle { font-size: 1.3rem; color: var(--text-muted); margin-bottom: 50px; letter-spacing: 0.25em; }
         
-        .glitch-text { animation: glitch 1s linear infinite; }
-        @keyframes glitch {
-            2%, 64% { transform: translate(2px,0) skew(0deg); }
-            4%, 60% { transform: translate(-2px,0) skew(0deg); }
-            62% { transform: translate(0,0) skew(5deg); }
+        /* 3D FLOATING GLASS TERMINAL */
+        .terminal-wrapper {
+            perspective: 1200px;
+            width: 100%;
         }
 
+        .terminal-window {
+            background: var(--glass-bg); 
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-radius: 12px; position: relative;
+            height: 380px; display: flex; flex-direction: column;
+            font-family: var(--font-mono); font-size: 0.85rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.05);
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed), transform 0.1s ease-out;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transform: rotateY(-5deg) rotateX(5deg);
+        }
+
+        /* Scanline overlay */
+        .terminal-window::after {
+            content: ''; position: absolute; inset: 0; pointer-events: none;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.03) 50%, transparent 50%);
+            background-size: 100% 4px; opacity: 0.4; z-index: 5;
+        }
+
+        .terminal-header {
+            display: flex; gap: 8px; padding: 14px 20px; border-bottom: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.03); align-items: center;
+        }
+        .term-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text-muted); opacity: 0.4; }
+        .term-dot:first-child { background: #ff5f56; opacity: 0.8; }
+        .term-dot:nth-child(2) { background: #ffbd2e; opacity: 0.8; }
+        .term-dot:nth-child(3) { background: #27c93f; opacity: 0.8; }
+        .term-title { margin-left: auto; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        
+        .terminal-body {
+            flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;
+            scrollbar-width: thin; scrollbar-color: var(--accent) transparent; position: relative; z-index: 2;
+        }
+        .term-line { word-break: break-all; line-height: 1.5; }
+        .term-line.output { color: var(--text-muted); }
+        .term-line.system { color: var(--accent); text-shadow: 0 0 5px var(--accent-dim); }
+        .term-line.error { color: #ff4444; text-shadow: 0 0 5px rgba(255,68,68,0.3); }
+        
+        .input-line { display: flex; align-items: center; gap: 10px; margin-top: auto; padding: 16px 20px; border-top: 1px solid var(--glass-border); background: rgba(0,0,0,0.2); position: relative; z-index: 2; }
+        .prompt-char { color: var(--accent); font-weight: bold; text-shadow: 0 0 8px var(--accent-glow); }
+        #cmd-input {
+            flex: 1; background: transparent; border: none; outline: none;
+            color: var(--text-main); font-family: var(--font-mono); font-size: 0.9rem;
+            caret-color: var(--accent);
+        }
+
+        .sys-meta { display: flex; flex-direction: column; gap: 10px; margin-top: 40px; }
+        .meta-row { display: flex; justify-content: space-between; max-width: 320px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; }
+        .meta-label { color: var(--text-muted); font-size: 0.75rem; letter-spacing: 0.1em; }
+        .meta-val { color: var(--accent); font-size: 0.75rem; letter-spacing: 0.1em; }
+
+        /* Hero Visual Core (Right Side) */
+        .hero-visual { position: relative; width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
+        .hex-ring-vis { position: absolute; border: 1px solid var(--glass-border); border-radius: 50%; transition: border-color var(--transition-speed); }
+        .vis-1 { width: 80%; height: 80%; animation: spin 25s linear infinite; border-top-color: var(--accent); border-bottom-color: var(--accent); }
+        .vis-2 { width: 55%; height: 55%; animation: spin 18s linear infinite reverse; border-left-color: var(--accent); border-right-color: var(--accent); opacity: 0.6; }
+        .core-glow { width: 120px; height: 120px; background: var(--accent); border-radius: 50%; filter: blur(40px); opacity: 0.3; animation: breathe 4s ease-in-out infinite; transition: background var(--transition-speed); }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes breathe { 0%, 100% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
+
+        /* =========================================
+           5. CAPABILITIES GRID
+           ========================================= */
+        .section-header { margin-bottom: 60px; }
+        .section-num { color: var(--accent); font-family: var(--font-mono); font-size: 0.9rem; margin-bottom: 10px; display: block; }
+        .section-title { font-size: 2.8rem; text-shadow: 0 0 30px var(--accent-dim); }
+
+        .cap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        
+        .cap-card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            padding: 36px; position: relative; overflow: hidden;
+            transition: all 0.3s ease; cursor: pointer; border-radius: 8px;
+        }
+        .cap-card:hover { border-color: var(--accent); transform: translateY(-6px); box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+        .cap-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent); opacity: 0; transition: opacity 0.3s; }
+        .cap-card:hover::before { opacity: 1; }
+        
+        .cap-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .cap-icon { width: 36px; height: 36px; stroke: var(--accent); fill: none; stroke-width: 1.5; transition: stroke var(--transition-speed); }
+        .cap-id { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); }
+        .cap-name { font-size: 1.3rem; margin-bottom: 10px; font-weight: 600; }
+        .cap-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+        .cap-status { display: inline-block; margin-top: 20px; font-size: 0.65rem; padding: 3px 10px; border: 1px solid var(--glass-border); color: var(--accent); border-radius: 2px; }
+        
+        .cap-detail {
+            max-height: 0; overflow: hidden; opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
+            font-size: 0.8rem; color: var(--text-main); border-top: 1px solid var(--glass-border);
+            font-family: var(--font-mono);
+        }
+        .cap-card.expanded .cap-detail { max-height: 200px; opacity: 1; margin-top: 20px; padding-top: 15px; }
+        .cap-card.expanded { border-color: var(--accent); background: var(--accent-dim); }
+        .expand-hint { font-size: 0.65rem; color: var(--accent); margin-top: 10px; opacity: 0; transition: opacity 0.3s; text-transform: uppercase; letter-spacing: 0.1em; }
+        .cap-card:hover .expand-hint { opacity: 1; }
+
+        /* =========================================
+           6. ARCHITECTURE & THINKING
+           ========================================= */
+        .arch-container { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); padding: 50px; border-radius: 12px; overflow-x: auto; }
+        .flow-diagram { display: flex; align-items: center; justify-content: space-between; min-width: 800px; gap: 10px; position: relative; }
+        .flow-line { position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--glass-border); z-index: 0; }
+        .node { position: relative; z-index: 1; background: var(--bg-core); border: 1px solid var(--glass-border); padding: 20px 28px; text-align: center; min-width: 130px; transition: all 0.3s; cursor: default; border-radius: 4px; }
+        .node:hover { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-dim); }
+        .node-label { font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+        .node-sub { font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-mono); }
+        .flow-particle { position: absolute; top: 50%; left: 0; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent-glow); animation: flow-move 4s linear infinite; z-index: 2; transform: translateY(-50%); }
+        @keyframes flow-move { 0% { left: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+
+        .think-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); padding: 50px; margin-top: 50px; border-radius: 12px; }
+        .think-input { font-family: var(--font-mono); font-size: 1rem; color: var(--text-main); padding: 20px; border-left: 3px solid var(--accent); background: rgba(0,0,0,0.3); border-radius: 0 4px 4px 0; }
+        .think-steps { display: flex; flex-direction: column; gap: 14px; }
+        .step { display: flex; align-items: center; gap: 14px; opacity: 0.3; transition: opacity 0.3s; }
+        .step.active { opacity: 1; }
+        .step-num { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); width: 24px; }
+        .step-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .step-bar { flex: 1; height: 1px; background: var(--glass-border); position: relative; overflow: hidden; }
+        .step-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--accent); transition: width 0.3s; box-shadow: 0 0 8px var(--accent-glow); }
+        .step.active .step-fill { width: 100%; }
+
+        /* =========================================
+           7. DASHBOARD & MODES
+           ========================================= */
+        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--glass-border); border: 1px solid var(--glass-border); border-radius: 8px; overflow: hidden; }
+        .dash-item { background: var(--bg-core); padding: 28px; display: flex; flex-direction: column; gap: 10px; }
+        .dash-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        .dash-val { font-family: var(--font-mono); font-size: 0.95rem; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+        .dash-indicator { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+
+        .mode-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 50px; }
+        .mode-card { padding: 40px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(10px); position: relative; border-radius: 8px; transition: all 0.3s; }
+        .mode-card:hover { transform: translateY(-4px); }
+        .mode-card.normal { border-color: rgba(0,229,255,0.2); }
+        .mode-card.devil { border-color: rgba(255,42,42,0.2); }
+        .mode-badge { position: absolute; top: 20px; right: 20px; font-size: 0.65rem; padding: 3px 10px; border: 1px solid currentColor; border-radius: 2px; }
+        .mode-card.normal .mode-badge { color: #00e5ff; }
+        .mode-card.devil .mode-badge { color: #ff2a2a; }
+        .mode-title { font-size: 1.8rem; margin-bottom: 15px; }
+        .mode-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 25px; line-height: 1.6; }
+        .mode-quote { font-family: var(--font-mono); font-size: 0.85rem; font-style: italic; opacity: 0.9; }
+
+        /* =========================================
+           8. CREATOR & FOOTER
+           ========================================= */
+        .creator-section { text-align: center; padding: 140px 0; border-top: 1px solid var(--glass-border); margin-top: 100px; }
+        .creator-name { font-size: 1.8rem; margin-bottom: 20px; letter-spacing: 0.25em; color: var(--accent); }
+        .creator-bio { color: var(--text-muted); max-width: 650px; margin: 0 auto 40px; font-size: 1.05rem; line-height: 1.7; }
+        .creator-links { display: flex; justify-content: center; gap: 30px; }
+        .creator-link { color: var(--accent); text-decoration: none; font-family: var(--font-mono); font-size: 0.9rem; border-bottom: 1px solid transparent; transition: 0.3s; padding-bottom: 2px; }
+        .creator-link:hover { border-color: var(--accent); text-shadow: 0 0 10px var(--accent-dim); }
+        footer { padding: 50px 0; text-align: center; font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--glass-border); letter-spacing: 0.1em; }
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+        @media (max-width: 900px) {
+            .hero-layout, .think-panel, .mode-compare { grid-template-columns: 1fr; }
+            .hero-visual { max-width: 300px; margin: 40px auto 0; }
+            .nav-links { display: none; }
+            .flow-diagram { min-width: 600px; }
+            .hud-scene { width: 260px; height: 260px; }
+            .hud-text { font-size: 3.5rem; }
+            .terminal-window { transform: none !important; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+            #landing-overlay { display: none; }
+            body { opacity: 1; }
+            body.system-active nav, body.system-active #hero { opacity: 1; transform: none; }
+        }
+
+        body.devil-mode .hero-title { animation: glitch-skew 4s infinite linear alternate-reverse; }
+        @keyframes glitch-skew {
+            0%, 95% { transform: skew(0deg); }
+            96% { transform: skew(-2deg); }
+            97% { transform: skew(2deg); }
+            98% { transform: skew(0deg); }
+            99% { transform: skew(-1deg); }
+            100% { transform: skew(0deg); }
+        }
     </style>
 </head>
 <body>
 
+    <!-- =========================================
+         CINEMATIC LANDING OVERLAY
+         ========================================= -->
+    <div id="landing-overlay">
+        <div class="hud-scene">
+            <div class="hud-core">
+                <div class="hud-ring ring-1"></div>
+                <div class="hud-ring ring-2"></div>
+                <div class="hud-ring ring-3"></div>
+                <div class="hud-text">H.E.X</div>
+            </div>
+        </div>
+        <button class="init-btn" id="initBtn">INITIALIZE SYSTEM</button>
+        <div class="landing-sub">Heuristic Execution Intelligence</div>
+    </div>
+
+    <!-- MAIN SYSTEM BACKGROUND -->
+    <div class="sys-grid"></div>
+
     <!-- NAVIGATION -->
-    <nav>
-        <div class="logo">H.E.X</div>
-        <div class="nav-links">
-            <a href="#">Home</a>
-            <a href="#">Features</a>
-            <a href="#">Architecture</a>
-            <a href="#">Download</a>
+    <nav id="navbar">
+        <div class="container nav-inner">
+            <div class="logo" onclick="window.scrollTo({top:0, behavior:'smooth'})">H.E.X</div>
+            <ul class="nav-links">
+                <li><a href="#hero" class="active">Home</a></li>
+                <li><a href="#capabilities">Capabilities</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#modes">Modes</a></li>
+                <li><a href="#system">System</a></li>
+                <li><a href="https://github.com/D3V1L96/HEX-Cognitive-Weapon.git" target="_blank" rel="noopener">GitHub</a></li>
+            </ul>
+            <div style="display:flex; gap:16px; align-items:center;">
+                <div class="sys-status mono"><span class="status-dot"></span> HEX ONLINE</div>
+            </div>
         </div>
     </nav>
 
-    <!-- ARC REACTOR BACKGROUND -->
-    <div class="reactor-container">
-        <div class="reactor-core">
-            <div class="ring r1"></div>
-            <div class="ring r2"></div>
-            <div class="ring r3"></div>
-            <div class="core-light"></div>
+    <!-- HERO -->
+    <section id="hero">
+        <div class="container hero-layout">
+            <div class="hero-content">
+                <span class="mono hero-tag">LOCAL INTELLIGENCE // PRIVATE BY DESIGN</span>
+                <h1 class="hero-title">H.E.X</h1>
+                <div class="hero-subtitle mono">HEURISTIC EXECUTION INTELLIGENCE</div>
+                
+                <!-- 3D GLASS TERMINAL -->
+                <div class="terminal-wrapper">
+                    <div class="terminal-window" id="terminal">
+                        <div class="terminal-header">
+                            <div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div>
+                            <span class="term-title">hex_shell_v2.4.exe</span>
+                        </div>
+                        <div class="terminal-body" id="termOutput">
+                            <div class="term-line system">HEX CORE INITIALIZED...</div>
+                            <div class="term-line output">Type 'help' for available commands.</div>
+                            <div class="term-line output">Awaiting input...</div>
+                        </div>
+                        <div class="input-line">
+                            <span class="prompt-char">></span>
+                            <input type="text" id="cmdInput" autocomplete="off" spellcheck="false" autofocus>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sys-meta mono">
+                    <div class="meta-row"><span class="meta-label">STATUS</span><span class="meta-val">ONLINE</span></div>
+                    <div class="meta-row"><span class="meta-label">INFERENCE</span><span class="meta-val">LOCAL (OLLAMA)</span></div>
+                    <div class="meta-row"><span class="meta-label">INTERACTION</span><span class="meta-val">TEXT + VOICE</span></div>
+                    <div class="meta-row"><span class="meta-label">EXECUTION</span><span class="meta-val">CONTROLLED</span></div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hex-ring-vis vis-1"></div>
+                <div class="hex-ring-vis vis-2"></div>
+                <div class="core-glow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CAPABILITIES -->
+    <section id="capabilities">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-num">01 // SYSTEM MODULES</span>
+                <h2 class="section-title">ENGINEERED CAPABILITIES</h2>
+                <p class="mono" style="color:var(--text-muted); margin-top:10px;">[ CLICK ANY MODULE TO INSPECT TECHNICAL SPECIFICATIONS ]</p>
+            </div>
+            <div class="cap-grid">
+                <div class="cap-card" data-detail="Engine: Ollama/Llama3 | Latency: <200ms | Privacy: 100% Local">
+                    <div class="cap-head">
+                        <svg class="cap-icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+                        <span class="cap-id">01</span>
+                    </div>
+                    <div class="cap-name">Local Intelligence</div>
+                    <div class="cap-desc">Private language-model inference through Ollama. No cloud exfiltration.</div>
+                    <span class="cap-status mono">ACTIVE</span>
+                    <div class="expand-hint">[ INSPECT ]</div>
+                    <div class="cap-detail"></div>
+                </div>
+                <div class="cap-card" data-detail="Memory: Vector DB + Semantic Search | Context Window: Dynamic">
+                    <div class="cap-head">
+                        <svg class="cap-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        <span class="cap-id">02</span>
+                    </div>
+                    <div class="cap-name">Conversational Core</div>
+                    <div class="cap-desc">Context-aware processing with persistent memory layers.</div>
+                    <span class="cap-status mono">ACTIVE</span>
+                    <div class="expand-hint">[ INSPECT ]</div>
+                    <div class="cap-detail"></div>
+                </div>
+                <div class="cap-card" data-detail="STT: Whisper-Tiny | TTS: Piper Neural | VAD: Silero">
+                    <div class="cap-head">
+                        <svg class="cap-icon" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+                        <span class="cap-id">03</span>
+                    </div>
+                    <div class="cap-name">Voice Interaction</div>
+                    <div class="cap-desc">Speech-to-text and text-to-speech pipeline for hands-free control.</div>
+                    <span class="cap-status mono">READY</span>
+                    <div class="expand-hint">[ INSPECT ]</div>
+                    <div class="cap-detail"></div>
+                </div>
+                <div class="cap-card" data-detail="API: Win32 + UI Automation | Safety: Whitelist Only | Scope: User-Space">
+                    <div class="cap-head">
+                        <svg class="cap-icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        <span class="cap-id">04</span>
+                    </div>
+                    <div class="cap-name">Desktop Automation</div>
+                    <div class="cap-desc">Controlled interaction with Windows APIs and supported applications.</div>
+                    <span class="cap-status mono">CONTROLLED</span>
+                    <div class="expand-hint">[ INSPECT ]</div>
+                    <div class="cap-detail"></div>
+                </div>
+                <div class="cap-card" data-detail="Storage: Encrypted SQLite | Retention: Configurable | Isolation: Per-Project">
+                    <div class="cap-head">
+                        <svg class="cap-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        <span class="cap-id">05</span>
+                    </div>
+                    <div class="cap-name">Memory Context</div>
+                    <div class="cap-desc">Project-specific memory components for continuity across sessions.</div>
+                    <span class="cap-status mono">ACTIVE</span>
+                    <div class="expand-hint">[ INSPECT ]</div>
+                    <div class="cap-detail"></div>
+                </div>
+                <div class="cap-card" data-detail="Protocol: Windows Media Session API | Control: Play/Pause/Skip/Vol">
+                    <div class="cap-head">
+                        <svg class="cap-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <span class="cap-id">06</span>
+                    </div>
+                    <div class="cap-name">Media Intelligence</div>
+                    <div class="cap-desc">Integration with Windows media sessions and playback controls.</div>
+                    <span class="cap-status mono">STANDBY</span>
+                    <div class="expand-hint">[ INSPECT ]</div>
+                    <div class="cap-detail"></div>
+                </div>
+                <div class="cap-card" data-detail="Router: Intent Classifier | Tools: Function Calling Schema | Validation: Pre-execution Check">
+                    <div class="cap-head">
+                        <svg class="cap-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        <span class="cap-id">07</span>
+                    </div>
+                    <div class="cap-name">Execution Layer</div>
+                    <div class="cap-desc">Intent routing between conversational requests and system tools.</div>
+                    <span class="cap-status mono">VERIFIED</span>
+                    <div class="expand-hint">[ INSPECT ]</div>
+                    <div class="cap-detail"></div>
+                </div>
+                <div class="cap-card" data-detail="Provider: DuckDuckGo/SearXNG | Filter: SafeSearch Enforced | Cache: Local TTL">
+                    <div class="cap-head">
+                        <svg class="cap-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        <span class="cap-id">08</span>
+                    </div>
+                    <div class="cap-name">External Intel</div>
+                    <div class="cap-desc">Optional integrations for authorized web reconnaissance workflows.</div>
+                    <span class="cap-status mono">OPT-IN</span>
+                    <div class="expand-hint">[ INSPECT ]</div>
+                    <div class="cap-detail"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section id="architecture">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-num">02 // SYSTEM FLOW</span>
+                <h2 class="section-title">ARCHITECTURE VISUALIZATION</h2>
+            </div>
+            <div class="arch-container">
+                <div class="flow-diagram">
+                    <div class="flow-line"></div>
+                    <div class="flow-particle"></div>
+                    <div class="node"><div class="node-label">USER</div><div class="node-sub">INPUT</div></div>
+                    <div class="node"><div class="node-label">INTERFACE</div><div class="node-sub">TEXT/VOICE</div></div>
+                    <div class="node"><div class="node-label">HEX CORE</div><div class="node-sub">CONTEXT</div></div>
+                    <div class="node"><div class="node-label">OLLAMA</div><div class="node-sub">INFERENCE</div></div>
+                    <div class="node"><div class="node-label">ROUTER</div><div class="node-sub">TOOLS</div></div>
+                    <div class="node"><div class="node-label">EXECUTION</div><div class="node-sub">SYSTEM</div></div>
+                    <div class="node"><div class="node-label">RESPONSE</div><div class="node-sub">VERIFIED</div></div>
+                </div>
+                <p class="mono text-center" style="margin-top:30px; font-size:0.7rem; color:var(--text-muted);">INTERACTIVE REPRESENTATION OF LOCAL INFERENCE PIPELINE</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW HEX THINKS -->
+    <section id="thinking">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-num">03 // COGNITIVE LIFECYCLE</span>
+                <h2 class="section-title">HOW HEX PROCESSES INTENT</h2>
+            </div>
+            <div class="think-panel">
+                <div>
+                    <div class="mono" style="color:var(--accent); margin-bottom:15px;">USER INPUT</div>
+                    <div class="think-input">"HEX, lower the volume and tell me what is playing."</div>
+                </div>
+                <div class="think-steps" id="thinkSteps">
+                    <div class="step" data-step="1"><span class="step-num">01</span><span class="step-label">Input Received</span><div class="step-bar"><div class="step-fill"></div></div></div>
+                    <div class="step" data-step="2"><span class="step-num">02</span><span class="step-label">Intent Analysis</span><div class="step-bar"><div class="step-fill"></div></div></div>
+                    <div class="step" data-step="3"><span class="step-num">03</span><span class="step-label">Context Check</span><div class="step-bar"><div class="step-fill"></div></div></div>
+                    <div class="step" data-step="4"><span class="step-num">04</span><span class="step-label">Tool Routing</span><div class="step-bar"><div class="step-fill"></div></div></div>
+                    <div class="step" data-step="5"><span class="step-num">05</span><span class="step-label">Permission Validation</span><div class="step-bar"><div class="step-fill"></div></div></div>
+                    <div class="step" data-step="6"><span class="step-num">06</span><span class="step-label">Execution</span><div class="step-bar"><div class="step-fill"></div></div></div>
+                    <div class="step" data-step="7"><span class="step-num">07</span><span class="step-label">Result Verification</span><div class="step-bar"><div class="step-fill"></div></div></div>
+                    <div class="step" data-step="8"><span class="step-num">08</span><span class="step-label">Response Delivered</span><div class="step-bar"><div class="step-fill"></div></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODES -->
+    <section id="modes">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-num">04 // PERSONALITY MATRIX</span>
+                <h2 class="section-title">DUAL INTERFACE MODES</h2>
+            </div>
+            <div class="mode-compare">
+                <div class="mode-card normal">
+                    <span class="mode-badge mono">NORMAL</span>
+                    <div class="mode-title">PRECISION</div>
+                    <div class="mode-desc">Calm, professional, assistant-focused interaction. Designed for clarity and extended work sessions.</div>
+                    <div class="mode-quote">"Precision without noise."</div>
+                </div>
+                <div class="mode-card devil">
+                    <span class="mode-badge mono">DEVIL</span>
+                    <div class="mode-title">PRESENCE</div>
+                    <div class="mode-desc">Direct, confident, cinematic interface. Same engineered control with intensified personality.</div>
+                    <div class="mode-quote">"Same intelligence. Different presence."</div>
+                </div>
+            </div>
+            <p class="mono text-center" style="margin-top:40px; color:var(--text-muted); font-size:0.8rem;">VISUAL INTENSITY CHANGES. ENGINEERING DISCIPLINE DOES NOT.</p>
+        </div>
+    </section>
+
+    <!-- SYSTEM STATUS -->
+    <section id="system">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-num">05 // LIVE TELEMETRY</span>
+                <h2 class="section-title">SYSTEM DASHBOARD</h2>
+            </div>
+            <div class="dash-grid">
+                <div class="dash-item"><span class="dash-label">HEX CORE</span><div class="dash-val"><span class="dash-indicator"></span> ONLINE</div></div>
+                <div class="dash-item"><span class="dash-label">LOCAL INFERENCE</span><div class="dash-val"><span class="dash-indicator"></span> READY</div></div>
+                <div class="dash-item"><span class="dash-label">VOICE MODULE</span><div class="dash-val"><span class="dash-indicator"></span> AVAILABLE</div></div>
+                <div class="dash-item"><span class="dash-label">MEMORY LAYER</span><div class="dash-val"><span class="dash-indicator"></span> ACTIVE</div></div>
+                <div class="dash-item"><span class="dash-label">MEDIA INTERFACE</span><div class="dash-val"><span class="dash-indicator"></span> STANDBY</div></div>
+                <div class="dash-item"><span class="dash-label">EXECUTION PROTOCOL</span><div class="dash-val"><span class="dash-indicator"></span> CONTROLLED</div></div>
+            </div>
+            <p class="mono text-center" style="margin-top:30px; font-size:0.7rem; color:var(--text-muted);">SIMULATED PORTFOLIO TELEMETRY // NOT CONNECTED TO LOCAL HOST</p>
+        </div>
+    </section>
+
+    <!-- CREATOR -->
+    <div class="creator-section">
+        <div class="container">
+            <div class="mono accent" style="margin-bottom:20px;">ENGINEERED BY</div>
+            <div class="creator-name">DARKDEVIL</div>
+            <div class="creator-bio">Built from curiosity about how local AI can move beyond conversation and become a practical interface between intelligence and the desktop.</div>
+            <div class="creator-links">
+                <a href="https://github.com/D3V1L96/HEX-Cognitive-Weapon.git" target="_blank" class="creator-link">GITHUB REPOSITORY</a>
+                <a href="https://github.com/D3V1L96" target="_blank" class="creator-link">DEVELOPER PROFILE</a>
+            </div>
         </div>
     </div>
 
-    <!-- LOADING SCREEN -->
-    <div id="loader">
-        <div class="loading-text">INITIALIZING CORE</div>
-        <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
-        <div style="margin-top: 10px; font-size: 0.8rem; color: #555;" id="boot-log">Connecting to local neural core...</div>
-    </div>
-
-    <!-- MAIN INTERFACE -->
-    <div id="interface">
-        <header>
-            <h1>H.E.X <span style="font-size: 1rem; color: var(--secondary);">// COGNITIVE WEAPON</span></h1>
-            <div class="devil-switch" onclick="toggleDevil()">
-                <span style="font-weight: bold; letter-spacing: 2px;">DEVIL MODE</span>
-                <div class="switch-track"><div class="switch-knob"></div></div>
-            </div>
-        </header>
-
-        <div class="intro-section">
-            <p class="intro-text" id="typewriter"></p><span class="cursor"></span>
+    <footer>
+        <div class="container">
+            &copy; 2026 H.E.X PROJECT. LOCAL INTELLIGENCE. CONTROLLED EXECUTION. PRIVATE BY DESIGN.
         </div>
+    </footer>
 
-        <div class="grid">
-            <div class="card" onmouseenter="typeEffect(this, 'HEX operates entirely offline using Ollama. No cloud dependencies. No data leaks. Total digital sovereignty.')">
-                <div class="card-status">ACTIVE</div>
-                <h3>LOCAL SOVEREIGNTY</h3>
-                <p>Hover to access data stream...</p>
-            </div>
-
-            <div class="card" onmouseenter="typeEffect(this, 'Advanced Hinglish TTS engine capable of natural code-switching. It doesn’t just speak; it communicates with emotion and precision.')">
-                <div class="card-status">NEURAL</div>
-                <h3>COGNITIVE VOICE</h3>
-                <p>Hover to access data stream...</p>
-            </div>
-
-            <div class="card" onmouseenter="typeEffect(this, 'Real-time tracking of Bitchord, Spotify, and YouTube via Windows SMTC. HEX knows what you’re listening to before you do.')">
-                <div class="card-status">TRACKING</div>
-                <h3>MEDIA DOMINANCE</h3>
-                <p>Hover to access data stream...</p>
-            </div>
-
-            <div class="card" onmouseenter="typeEffect(this, 'Full control over files, processes, volume, and navigation. HEX doesn’t just suggest actions; it executes them with ruthless efficiency.')">
-                <div class="card-status">UNRESTRICTED</div>
-                <h3>SYSTEM CONTROL</h3>
-                <p>Hover to access data stream...</p>
-            </div>
-
-            <div class="card" onmouseenter="typeEffect(this, 'A specialized state that unlocks unrestricted power. UI turns blood-red. All hesitations disabled. Loyalty to DarkDevil only.')">
-                <div class="card-status">LOCKED</div>
-                <h3>DEVIL MODE</h3>
-                <p>Hover to access data stream...</p>
-            </div>
-
-            <div class="card" onmouseenter="typeEffect(this, 'Built by DarkDevil. Designed for those who refuse to be watched. The digital shadow that walks beside you.')">
-                <div class="card-status">SOVEREIGN</div>
-                <h3>CREATOR LEGACY</h3>
-                <p>Hover to access data stream...</p>
-            </div>
-        </div>
-    </div>
-
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- BOOT SEQUENCE WITH REACTOR OVERCHARGE ---
-        const loader = document.getElementById('loader');
-        const prog = document.getElementById('prog');
-        const log = document.getElementById('boot-log');
-        const interfaceDiv = document.getElementById('interface');
-        const rings = document.querySelectorAll('.ring');
-        const coreLight = document.querySelector('.core-light');
-        
-        let width = 0;
-        const logs = [
-            "Initializing neural core...",
-            "Loading local weights...",
-            "Bypassing cloud filters...",
-            "Connecting to Ollama...",
-            "System Online."
-        ];
+        document.addEventListener('DOMContentLoaded', () => {
+            const GITHUB_URL = "https://github.com/D3V1L96/HEX-Cognitive-Weapon.git";
+            
+            // --- LANDING PAGE TRANSITION ---
+            const initBtn = document.getElementById('initBtn');
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        function boot() {
-            if (width >= 100) {
-                setTimeout(() => {
-                    loader.style.opacity = '0';
+            if (prefersReducedMotion) {
+                document.body.classList.add('system-active');
+            } else {
+                initBtn.addEventListener('click', () => {
+                    initBtn.textContent = "INITIALIZING...";
+                    initBtn.style.pointerEvents = "none";
                     setTimeout(() => {
-                        loader.style.display = 'none';
-                        interfaceDiv.style.display = 'block';
-                        setTimeout(() => {
-                            interfaceDiv.style.opacity = '1';
-                            interfaceDiv.style.transform = 'scale(1)';
-                            startIntro();
-                        }, 100);
-                    }, 1000);
-                }, 500);
-                return;
+                        document.body.classList.add('system-active');
+                        setTimeout(() => document.getElementById('cmdInput').focus(), 1200);
+                    }, 600);
+                });
             }
+
+            // --- 3D TERMINAL TILT EFFECT ---
+            const terminal = document.getElementById('terminal');
+            const wrapper = document.querySelector('.terminal-wrapper');
             
-            width += Math.random() * 5;
-            if(width > 100) width = 100;
-            prog.style.width = width + '%';
-            
-            // REACTOR GLOW EFFECT DURING LOADING
-            let intensity = width / 100;
-            coreLight.style.boxShadow = `0 0 ${50 * intensity}px var(--primary), 0 0 ${100 * intensity}px var(--primary)`;
-            rings.forEach(ring => {
-                ring.style.borderColor = `rgba(${intensity > 0.5 ? '255,255,255' : '0,243,255'}, ${intensity})`;
+            if (!prefersReducedMotion && wrapper) {
+                wrapper.addEventListener('mousemove', (e) => {
+                    const rect = wrapper.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateY = ((x - centerX) / centerX) * 8;
+                    const rotateX = ((centerY - y) / centerY) * 8;
+                    
+                    terminal.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+                });
+
+                wrapper.addEventListener('mouseleave', () => {
+                    terminal.style.transform = 'rotateY(-5deg) rotateX(5deg)';
+                });
+            }
+
+            // --- INTERACTIVE TERMINAL SYSTEM ---
+            const cmdInput = document.getElementById('cmdInput');
+            const termOutput = document.getElementById('termOutput');
+            let isDevilMode = false;
+
+            terminal.addEventListener('click', () => cmdInput.focus());
+
+            function printLine(text, type = 'output') {
+                const div = document.createElement('div');
+                div.className = `term-line ${type}`;
+                div.textContent = text;
+                termOutput.appendChild(div);
+                termOutput.scrollTop = termOutput.scrollHeight;
+            }
+
+            function activateDevilMode() {
+                isDevilMode = true;
+                document.body.classList.add('devil-mode');
+                document.querySelector('meta[name="theme-color"]').content = '#0a0505';
+            }
+
+            function deactivateDevilMode() {
+                isDevilMode = false;
+                document.body.classList.remove('devil-mode');
+                document.querySelector('meta[name="theme-color"]').content = '#050a14';
+            }
+
+            function executeCommand(cmd) {
+                const cleanCmd = cmd.trim().toLowerCase();
+                printLine(`> ${cmd}`, 'system');
+                if (!cleanCmd) return;
+
+                switch(cleanCmd) {
+                    case 'help':
+                        printLine('AVAILABLE COMMANDS:', 'system');
+                        printLine('  devil      - Activate Devil Mode (Aggressive UI)');
+                        printLine('  normal     - Restore Standard Interface');
+                        printLine('  github     - Open Source Repository');
+                        printLine('  status     - Display System Telemetry');
+                        printLine('  clear      - Clear Terminal Output');
+                        printLine('  hex        - About H.E.X System');
+                        break;
+                    case 'devil': case 'sudo devil': case 'devil mode':
+                        if (isDevilMode) { printLine('DEVIL MODE ALREADY ACTIVE.', 'error'); }
+                        else {
+                            activateDevilMode();
+                            printLine('OVERRIDING SAFETY PERSONALITY...', 'error');
+                            setTimeout(() => printLine('DEVIL MODE ENGAGED.', 'error'), 800);
+                        }
+                        break;
+                    case 'normal': case 'reset':
+                        if (!isDevilMode) { printLine('SYSTEM ALREADY IN NORMAL MODE.', 'output'); }
+                        else {
+                            deactivateDevilMode();
+                            printLine('RESTORING STANDARD PARAMETERS...', 'system');
+                            setTimeout(() => printLine('NORMAL MODE RESTORED.', 'system'), 600);
+                        }
+                        break;
+                    case 'github': case 'repo': case 'source':
+                        printLine(`OPENING REPOSITORY: ${GITHUB_URL}`, 'system');
+                        window.open(GITHUB_URL, '_blank');
+                        break;
+                    case 'status':
+                        printLine('HEX CORE: ONLINE', 'system');
+                        printLine('INFERENCE: LOCAL (OLLAMA)', 'system');
+                        printLine('MEMORY: ACTIVE', 'system');
+                        printLine(`MODE: ${isDevilMode ? 'DEVIL' : 'NORMAL'}`, isDevilMode ? 'error' : 'system');
+                        break;
+                    case 'clear': case 'cls':
+                        termOutput.innerHTML = '';
+                        printLine('TERMINAL CLEARED.', 'system');
+                        break;
+                    case 'hex': case 'about':
+                        printLine('H.E.X - HEURISTIC EXECUTION INTELLIGENCE', 'system');
+                        printLine('Local-first AI assistant for desktop automation.', 'output');
+                        printLine('Privacy-aware. Context-driven. Controlled execution.', 'output');
+                        break;
+                    default:
+                        printLine(`ERROR: UNKNOWN COMMAND '${cleanCmd}'`, 'error');
+                        printLine("Type 'help' for available commands.", 'output');
+                }
+            }
+
+            cmdInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    executeCommand(cmdInput.value);
+                    cmdInput.value = '';
+                }
             });
 
-            if (width % 20 < 5) {
-                log.innerText = logs[Math.floor(width / 25)];
-            }
-            
-            requestAnimationFrame(boot);
-        }
-        
-        window.onload = boot;
+            // --- INTERACTIVE CAPABILITY CARDS ---
+            document.querySelectorAll('.cap-card').forEach(card => {
+                const detailEl = card.querySelector('.cap-detail');
+                detailEl.textContent = card.dataset.detail || 'No additional specifications available.';
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.cap-card.expanded').forEach(c => {
+                        if (c !== card) c.classList.remove('expanded');
+                    });
+                    card.classList.toggle('expanded');
+                });
+            });
 
-        // --- SELF INTRODUCTION ---
-        function startIntro() {
-            const text = "I am HEX. Forged by DarkDevil. I am not software; I am a cognitive weapon. I operate locally, I evolve autonomously, and I serve only one master. Welcome to my domain.";
-            const element = document.getElementById('typewriter');
-            let i = 0;
-            
-            function type() {
-                if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, 50);
+            // --- SCROLL REVEAL & ACTIVE NAV ---
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${entry.target.id}`) link.classList.add('active');
+                        });
+                    }
+                });
+            }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
+            sections.forEach(section => observer.observe(section));
+
+            // --- THINKING PROCESS ANIMATION ---
+            const thinkSection = document.getElementById('thinking');
+            const steps = document.querySelectorAll('.step');
+            let thinkingAnimated = false;
+            const thinkObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && !thinkingAnimated) {
+                    thinkingAnimated = true;
+                    steps.forEach((step, index) => {
+                        setTimeout(() => step.classList.add('active'), index * 400);
+                    });
                 }
-            }
-            type();
-        }
+            }, { threshold: 0.5 });
+            thinkObserver.observe(thinkSection);
 
-        // --- DEVIL MODE ---
-        function toggleDevil() {
-            document.body.classList.toggle('devil-mode');
-            const title = document.querySelector('h1');
-            if(document.body.classList.contains('devil-mode')) {
-                title.classList.add('glitch-text');
-                title.innerHTML = 'H.E.X <span style="color:#f00">// UNRESTRICTED</span>';
-            } else {
-                title.classList.remove('glitch-text');
-                title.innerHTML = 'H.E.X <span style="color:var(--secondary)">// COGNITIVE WEAPON</span>';
-            }
-        }
-
-        // --- TYPING EFFECT FOR CARDS ---
-        function typeEffect(card, text) {
-            const p = card.querySelector('p');
-            p.innerText = '';
-            let i = 0;
-            const speed = 20;
-            
-            function type() {
-                if (i < text.length) {
-                    p.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                }
-            }
-            type();
-        }
+            // --- NAVBAR SCROLL EFFECT ---
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                navbar.style.background = window.scrollY > 50 
+                    ? 'rgba(5, 10, 20, 0.9)' 
+                    : 'rgba(5, 10, 20, 0.5)';
+            }, { passive: true });
+        });
     </script>
 </body>
 </html>
